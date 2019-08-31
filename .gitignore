@@ -1,0 +1,6 @@
+/bin
+/.project
+/.actionScriptProperties
+/.flexLibProperties
+/.settings
+node_modules

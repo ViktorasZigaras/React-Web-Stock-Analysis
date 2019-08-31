@@ -1,0 +1,10 @@
+.hover-item {
+    height: 20px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+  }
+  
+  .hover-item:hover {
+    background: #cccccc;
+    cursor: pointer;
+  }
