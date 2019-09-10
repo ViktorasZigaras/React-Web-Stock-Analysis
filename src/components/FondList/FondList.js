@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import './FondList.css'; // cia tipo reiskia, kad tam paciam folderi yra css
-//import axios from 'axios';
+import { /*Col, */Row } from 'reactstrap';
+import './FondList.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+//import axios from 'axios';
+import location from '../../config.js';
 
 class FondList extends PureComponent {
   
@@ -13,82 +14,75 @@ class FondList extends PureComponent {
 
   }
 
-  onClickCustomer(/*fundName, */fundId/*, cost, quantity, tax*/) {
-    /*  
-    document.getElementsByName('onClickInfo')[0].innerHTML = 
-    <div>
-      <Row><Col>'Fund Name: ' + {fundName}</Col></Row>
-      <Row><Col>'Fund Id: ' + {fundId}</Col></Row>
-      <Row><Col>'Amount Spent: ' + {cost}</Col></Row>
-      <Row><Col>'Quantity: ' + {quantity}</Col></Row>
-      <Row><Col>'Tax: ' + {tax}</Col></Row>
-    </div>;
+  componentDidMount(){
+    
+    console.log(location);
+    
+  }
+
+  onClickCustomer(fond) {
+    this.setState({selectedFond: fond});
+    /*
+    let url = 
+      'http://localhost/web-test-json/json.php?url=' +
+      'http://luminor-funds.metasite.lt/funds/funds/getJson/' +
+      '2019-07-25/2019-08-25/fund_' +
+      '22384';
+      //console.log(getJson(url));
+      //
+    /*
+    axios.get(url)
+    .then((res) => {
+      //const myObj = JSON.parse(res);
+      //console.log(myObj);
+      console.log(res.data.funds[22384].day[res.data.funds[22384].day.length-1]);
+      console.log(res);
+    })
+    .catch((error) => {
+      // handle your errors here
+      console.error(error)
+    });
     */
-    this.setState({selectedFond: fundId});
   }
 
   render() {
 
     const rows = [];
     let fondInfo = null;
-    let fond;
 
     if (this.state.selectedFond) {
-      fond = this.state.list.find(obj => obj.fundId = this.state.selectedFond);
+      const fond = this.state.selectedFond;
    
       fondInfo = 
-      <div>
-        <Row><Col>'Fund Name: ' + {fond.fundName}</Col></Row>
-        <Row><Col>'Fund Id: ' + {fond.fundId}</Col></Row>
-        <Row><Col>'Amount Spent: ' + {fond.cost}</Col></Row>
-        <Row><Col>'Quantity: ' + {fond.quantity}</Col></Row>
-        <Row><Col>'Tax: ' + {fond.tax}</Col></Row>
+      <div className="right-section">
+        <p className="main-label">Fund Name: {fond.fundName}</p>
+        <p className="main-label">Fund Id: {fond.fundId}</p>
+        <p className="main-label">Amount Spent: {fond.cost}</p>
+        <p className="main-label">Quantity: {fond.quantity}</p>
+        <p className="main-label">Tax: {fond.tax}</p>
       </div>;
     }
       
     this.state.list.forEach((entry) => { 
 
       rows.push(<p key={entry.fundName} className="hover-item" onClick={()=>this.onClickCustomer(
-        /*entry.fundName,*/ entry.fundId/*, entry.cost, entry.quantity, entry.tax*/)}>
-        {entry.fundName}, {entry.fundId}</p>);
+        entry)}>{entry.fundName}, {entry.fundId}</p>);
         
     });
       
     return (
-      <Container>
-        <Row>
-          <Col>
-            {rows}
-          </Col>
-          <Col>
-            {fondInfo}
-          </Col>
-        </Row>
-      </Container>
+      <Row>
+        <div className="left-section">
+          {rows}
+        </div>
+        <div>
+          {fondInfo}
+        </div>
+      </Row>
     );
 
   }
 
 }
-
-/*componentDidMount(){
-      //this.fetchData();
-    }*/
-    /*
-    fetchData(){
-        this.setState({ loading: true }) // sakome, kad pradedam krovima
-        axios.get('http://luminor-funds.metasite.lt/funds/funds/getJson/2019-07-25/2019-08-25/fund_22384')
-        .then(response => {
-
-            const formatedDataOrList = response.data; // paimi rezultata ir suformatuoji i sarasa
-            console.err('result', formatedDataOrList)
-            //this.setState({ loading: false, list: formatedDataOrList }) // sakome, kad baigem krovima
-        })
-        .catch(error => {
-            console.err('error', error)
-            this.setState({ loading: false }) // sakome, kad baigem krovima
-        })
-
-    }*/
 
 export default FondList;

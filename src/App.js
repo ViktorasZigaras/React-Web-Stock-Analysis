@@ -28,16 +28,18 @@ class App extends PureComponent {
   render() {
     return (
       <Container>
-        <Row>
-          <Col>
-            <FondList ref={this.listRef} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <FileHandling callbackFromParent={this.fundsGlobalCallback}/>
-          </Col>
-        </Row>
+        <div className="main-section">
+          <Row>
+            <Col>
+              <FondList ref={this.listRef} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <FileHandling callbackFromParent={this.fundsGlobalCallback}/>
+            </Col>
+          </Row>
+        </div>
       </Container>
     );
   }

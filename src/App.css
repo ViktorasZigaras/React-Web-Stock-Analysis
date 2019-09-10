@@ -1,29 +1,11 @@
-.main-label {
-  /*margin-top: 5px;*/
-  height: 5px;
-  width: 225px;
-}
-
-.right-section {
-  width: 350px;
-}
-
-.flex {
+/*.flex {
   display: flex;
-}
-
-.left-section {
-  width: 350px;
-  height: 150px;
-  overflow-y: auto;
-  border: 1px solid #000000;
-  margin-right: 10px;
-}
+}*/
 
 .main-section {
   border: 1px solid #000000;
   padding: 10px;
-  width: 600px;
+  width: 750px;
   margin-top: 15px;
   margin-left: 15px;
 }

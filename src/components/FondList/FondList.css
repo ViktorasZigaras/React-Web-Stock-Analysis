@@ -1,10 +1,31 @@
 .hover-item {
-    height: 20px;
-    margin-top: 5px;
-    margin-bottom: 0px;
-  }
+  height: 20px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  /*padding: 3px;*/
+}
   
-  .hover-item:hover {
-    background: #cccccc;
-    cursor: pointer;
-  }
+.hover-item:hover {
+  background-color: #cccccc;
+  cursor: pointer;
+}
+
+.left-section {
+  width: 350px;
+  height: 150px;
+  overflow-y: auto;
+  border: 1px solid #000000;
+  margin-left: 15px;
+}
+
+.main-label {
+  /*margin-top: 5px;*/
+  height: 5px;
+  /*width: 250px;*/
+}
+
+.right-section {
+  width: 350px;
+  margin-left: 10px;
+  border: 1px solid #000000;
+}

@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { /*Col, */Row, Button } from 'reactstrap';
 import './FileHandling.css';
 import cloneDeep from 'lodash/cloneDeep';
 import 'bootstrap/dist/css/bootstrap.min.css';
-//import App from '../src/App.js';
 
 class FileHandling extends PureComponent {
 
@@ -17,9 +16,8 @@ class FileHandling extends PureComponent {
     
   uploadFile (event) {
   
-    this.state.file = event.target.files[0];
-    //this.setState({file: event.target.files[0]});
-
+    const file = event.target.files[0];
+    console.log(file);
     const reader = new FileReader();
 
     reader.onload = function(){
@@ -33,6 +31,7 @@ class FileHandling extends PureComponent {
       let fundsGlobal = [];
 
       const iterate = function(element) {
+        
         if (element.fundName === item.fundName && element.fundId === item.fundId) {
           element.cost = Number(element.cost) + Number(item.cost);
           element.quantity = Number(element.quantity) + Number(item.quantity);
@@ -44,7 +43,9 @@ class FileHandling extends PureComponent {
         }
         else {
           createNew = true;
+          return;
         }
+        
       }
   
       while (index !== -1) {
@@ -52,12 +53,19 @@ class FileHandling extends PureComponent {
         fields = chunk.split(',');
   
         item = {};
-        item.fundName = fields[0];
-        item.fundId = fields[1].substring(1);
-        item.date = fields[2].substring(1);
-        item.cost = fields[3].substring(1);
-        item.quantity = fields[4].substring(1);
-        item.tax = fields[5].substring(1);
+
+        if (fundsGlobal.length > 0) {
+          item.fundName = fields[0].substring(2);//remove end of lines
+        }
+        else {
+          item.fundName = fields[0];
+        }
+        
+        item.fundId = fields[1]/*.substring(1)*/;
+        item.date = fields[2];
+        item.cost = fields[3];
+        item.quantity = fields[4];
+        item.tax = fields[5];
         item.entries = [cloneDeep(item)];
   
         //
@@ -82,18 +90,23 @@ class FileHandling extends PureComponent {
       this.props.callbackFromParent(fundsGlobal);
       this.setState({list: fundsGlobal});
 
+      //
+
+      //
+
     }.bind(this);
   
-    reader.readAsText(this.state.file);
+    reader.readAsText(file);
+
+    this.setState({file: file});
   
   }
   
   onSaveList () {
     
-    let data = '';
-
     if (this.state.file) {
       
+      let data = '';
       let entry;
       let item;
 
@@ -105,47 +118,29 @@ class FileHandling extends PureComponent {
 
           item = entry.entries[j];
 
-          data += item.fundName + ', ' + item.fundId + ', ' + item.date + ', '
-          + item.cost + ', ' + item.quantity + ', ' + item.tax + ';\n ';
+          data += item.fundName + ',' + item.fundId + ',' + item.date + ','
+          + item.cost + ',' + item.quantity + ',' + item.tax + ';\r\n';
 
         }
         
       }
 
-    }
+      require("downloadjs")(data, this.state.file.name, 'text/plain');
 
-    require("downloadjs")(data, this.state.file.name, 'text/plain');
+    }
     
   }
 
   render() {
     return (
-      <Container>
-        <Row>
-          <Col>
-            <input type="file" className="open-button" name="myFile" onChange={this.uploadFile} />
-          </Col>
-          <Col>
-            <Button color="primary" onClick={()=>this.onSaveList()}>save list</Button>
-          </Col>
-        </Row>
-      </Container>
+      <Row>
+        <input type="file" id="open" onChange={this.uploadFile} />
+        <label htmlFor="open" className="open-button">Upload file</label>
+        <Button color="primary" className="save-button" onClick={()=>this.onSaveList()}>Save list</Button>
+      </Row>
     );
   }
 
 }
-
-/*
-        fetch('http://luminor-funds.metasite.lt/funds/funds/getJson/2019-07-25/2019-08-25/fund_22384', {mode: 'no-cors'})
-        .then(response => response.json())
-        .then((jsonData) => {
-          // jsonData is parsed json object received from url
-          console.log(jsonData)
-        })
-        .catch((error) => {
-          // handle your errors here
-          console.error(error)
-        })
-        */
 
 export default FileHandling;
