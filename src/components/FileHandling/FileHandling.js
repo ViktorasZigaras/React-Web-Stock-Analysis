@@ -64,7 +64,7 @@ class FileHandling extends PureComponent {
         item.fundId = fields[1]/*.substring(1)*/;
         item.date = fields[2];
         item.cost = fields[3];
-        item.quantity = fields[4];
+        item.quantity = Number(fields[4]).toFixed(4);
         item.tax = fields[5];
         item.entries = [cloneDeep(item)];
   

@@ -10,10 +10,7 @@ class App extends PureComponent {
   constructor(props) {
 
     super(props);
-    this.state = {/*fundsGlobal: [], */listReference: ''};
-
-    this.listRef = React.createRef();
-    this.state.listReference = this.listRef;
+    this.state = {list: []};
 
     this.fundsGlobalCallback = this.fundsGlobalCallback.bind(this);
     
@@ -21,7 +18,7 @@ class App extends PureComponent {
 
   fundsGlobalCallback (value) {
     //this.setState({ fundsGlobal: value });
-    this.state.listReference.current.setState({list: value});
+    this.setState({list: value});
     //console.log(this.state.fundsGlobal);
   }
 
@@ -31,7 +28,7 @@ class App extends PureComponent {
         <div className="main-section">
           <Row>
             <Col>
-              <FondList ref={this.listRef} />
+              <FondList setList={this.state.list} />
             </Col>
           </Row>
           <Row>
