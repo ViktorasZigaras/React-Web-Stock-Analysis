@@ -10,119 +10,159 @@ class FondList extends PureComponent {
   constructor(props) {
 
     super(props);
-    this.state = {selectedFond: null, newValues: false};
+    this.state = {selectedFond: null};
 
   }
+  
+  /*componentDidMount(){
+    //console.log(location);
+  }*/
 
-  componentDidMount(){
-    
-    console.log(location);
-    
-  }
+  onClickFond(fond) {
 
-  onClickCustomer(fond) {
-
-    if (!fond.shareValue) {
-      //
-      const newDate = new Date()
-      const date = newDate.getDate();
-      let prevDate = date;
-      const month = newDate.getMonth() + 1;
-      let prevMonth = month - 1;
-      const year = newDate.getFullYear();
-      let prevYear = year;
-
-      if (prevDate > 30) {
-        prevDate = 30;
-
-        if (prevMonth === 2) {
-          prevDate = 28;
-        }
-      }
-
-      if (prevMonth === 0) {
-        prevMonth = 12;
-        prevYear = prevYear - 1;
-      }
-
-      const url = location + 'http://luminor-funds.metasite.lt/funds/funds/getJson/' +
-      prevYear + '-' + prevMonth + '-' + date + '/' + year + '-' + month + '-' + date + '/fund_' + fond.fundId;
-      console.log(url);
-
-      axios.get(url)
-      .then((res) => {
-        const data = res.data.funds[fond.fundId].day;
-        const value = data[data.length-1].price;
-        console.log(value);
-        fond.shareValue = Number(value).toFixed(2);
-        fond.totalValue = Number(fond.quantity * fond.shareValue).toFixed(2);
-        fond.valueChange = Number(fond.totalValue - fond.cost).toFixed(2);
-        fond.valuePercentChange = Number((fond.valueChange/fond.cost) * 100).toFixed(2);
-        if (fond.valuePercentChange > 0) {fond.valuePercentChange = '+' + fond.valuePercentChange;}
-        fond.valuePercentChange += '%';
-        this.setState({selectedFond: null});
-        this.setState({selectedFond: fond});
-      })
-      .catch((error) => {
-        console.error('Error: ' + error)
-      });
-
+    if (fond.shareValue) {
+      this.setState({selectedFond: fond});
+      return;
     }
 
-    this.setState({selectedFond: fond});
+    //
+    const newDate = new Date()
+    const date = newDate.getDate();
+    let prevDate = date;
+    const month = newDate.getMonth() + 1;
+    let prevMonth = month - 1;
+    const year = newDate.getFullYear();
+    let prevYear = year;
+
+    if (prevDate > 30) {
+      prevDate = 30;
+
+      if (prevMonth === 2) {
+        prevDate = 28;
+      }
+    }
+
+    if (prevMonth === 0) {
+      prevMonth = 12;
+      prevYear = prevYear - 1;
+    }
+
+    const url = location + 'http://luminor-funds.metasite.lt/funds/funds/getJson/' +
+    prevYear + '-' + prevMonth + '-' + date + '/' + year + '-' + month + '-' + date + '/fund_' + fond.fundId;
+    //console.log(url);
+
+    axios.get(url)
+    .then((res) => {
+      const data = res.data.funds[fond.fundId].day;
+      const value = data[data.length-1].price;
+      //console.log(value);
+      fond.shareValue = Number(value).toFixed(2);
+      fond.totalValue = Number(fond.quantity * fond.shareValue).toFixed(2);
+      fond.valueChange = Number(fond.totalValue - fond.value).toFixed(2);
+      fond.valuePercentChange = Number((fond.valueChange/fond.value) * 100).toFixed(2);
+      if (fond.valuePercentChange > 0) {fond.valuePercentChange = '+' + fond.valuePercentChange;}
+      //fond.valuePercentChange += '%';
+      //this.setState({selectedFond: null});
+      const updatedFond = { ...fond };
+      this.setState({selectedFond: updatedFond});
+    })
+    .catch((error) => {
+      console.error('Error: ' + error)
+    });
+    
+  }
+
+  onClickPurchase(purchase) {
+    //
   }
 
   render() {
 
-    const rows = [];
+    const fonds = [];
+    const purchases = [];
     let fondInfo = null;
+    const currency = 'EUR'; //&nbsp;
 
     if (this.state.selectedFond) {
       const fond = this.state.selectedFond;
   
+      //<div className="flex">
       fondInfo = 
       <div>
-        <p className="main-label">Fund Name: {fond.fundName}</p>
-        <p className="main-label">Fund Id: {fond.fundId}</p>
-        <p className="main-label">Amount Spent: {fond.cost}</p>
-        <p className="main-label">Quantity: {fond.quantity}</p>
-        <p className="main-label">Tax: {fond.tax}</p>
-        <p className="main-label">Share Value: {fond.shareValue}</p>
-        <p className="main-label">Total Value: {fond.totalValue}</p>
-        <div className="flex">
-          <p className="main-label">Change %:&nbsp;</p>
-          <p style={fond.valueChange > 0 ? {color:'green'}: {color:'red'}} className="main-label">
-            {fond.valuePercentChange}
-          </p>
-        </div>
-        <div className="flex">
-          <p className="main-label">Total Change:&nbsp;</p>
-          <p style={fond.valueChange > 0 ? {color:'green'}: {color:'red'}} className="main-label">
-            {fond.valueChange}
-          </p>
-        </div>
+        <p className="main-label">
+          {fond.fundName} ({fond.fundId})
+        </p>
+        <p className="main-label">
+          Value: {fond.value} {currency} (Spent: {fond.cost} {currency}, Tax: {fond.tax} {currency})
+        </p>
+        <p className="main-label">
+          Shares Owned: x{fond.quantity}
+        </p>
+        <p className="main-label">
+          Share Value: {fond.shareValue} {currency}
+        </p>
+        <p className="main-label">
+          Total Value: {fond.totalValue} {currency}
+        </p>
+        <p style={fond.valueChange > 0 ? {color:'green'}: {color:'red'}} className="main-label">
+          Total Value Change: {fond.valueChange} {currency}
+        </p>
+        <p style={fond.valueChange > 0 ? {color:'green'}: {color:'red'}} className="main-label">
+          Change: {fond.valuePercentChange}%
+        </p>
+        
       </div>;
 
       //Row main-row 
+
+      fond.entries.forEach((entry) => { 
+
+        entry.totalValue = Number(entry.quantity * fond.shareValue).toFixed(2);
+        entry.valueChange = Number(entry.totalValue - entry.value).toFixed(2);
+        entry.valuePercentChange = Number((entry.valueChange/entry.value) * 100).toFixed(2);
+
+        purchases.push(
+        <div key={entry.date} className="rowMix" onClick={()=>this.onClickPurchase(entry)}>
+          <div className="cellMix">{entry.date}</div>
+          <div className="cellMix">{entry.cost}</div>
+          <div className="cellMix">{entry.quantity}</div>
+          <div className="cellMix">{entry.tax}</div>
+          <div className="cellMix">{entry.value}</div>
+          <div className="cellMix">{entry.totalValue}</div>
+          <div className="cellMix">{entry.valueChange}</div>
+          <div className="cellMix">{entry.valuePercentChange}</div>
+        </div>);
+          
+      });
 
     }
 
     this.props.setList.forEach((entry) => { 
 
-      rows.push(<p key={entry.fundName} className="hover-item" onClick={()=>this.onClickCustomer(
-        entry)}>{entry.fundName}, {entry.fundId}</p>);
+      fonds.push(
+      <p key={entry.fundName} className="hover-item" onClick={()=>this.onClickFond(entry)}>
+        {entry.fundName} ({entry.fundId})
+      </p>);
         
     });
       
     return (
-      <Row>
-        <div className="left-section">
-          {rows}
-        </div>
-        <div className="right-section">
-          {fondInfo}
-        </div>
-      </Row>
+      <div>
+        <Row>
+          <div className="left-section">
+            {fonds}
+          </div>
+          <div className="right-section">
+            {fondInfo}
+          </div>
+        </Row>
+        <Row>
+          <div className="tableMix">
+            {purchases}
+          </div>
+        </Row>
+      </div>
+      
     );
 
   }

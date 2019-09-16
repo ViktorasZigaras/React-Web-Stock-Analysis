@@ -1,19 +1,26 @@
 .hover-item {
-  height: 20px;
+  height: 25px;
   margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
   margin-bottom: 0px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
   /*padding: 3px;*/
 }
   
 .hover-item:hover {
-  background-color: #cccccc;
+  background-color: #b4f7f6;
   cursor: pointer;
 }
 
 .left-section {
   width: 350px;
-  height: 195px;
+  height: 155px;
   overflow-y: auto;
+  background-color: #f1f4d9;
   border: 1px solid #000000;
   margin-left: 15px;
 }
@@ -21,19 +28,53 @@
 .main-label {
   /*margin-top: 5px;*/
   height: 5px;
-  /*width: 250px;*/
+  /*width: 100%;*/
+  width: 460px;
+  margin-left: 5px;
+  /*overflow-x: hidden;*/
 }
-
+/*
+.left-5 {
+  
+}
+*/
 .main-row {
   margin-left: 15px;
 }
 
 .right-section {
-  width: 350px;
+  width: 465px;
+  height: 155px;
   margin-left: 10px;
+  background-color: #f1f4d9;
   border: 1px solid #000000;
 }
 
 .flex {
   display: flex;
 }
+
+/**/
+
+.tableMix {
+  display: table;
+}
+
+.rowMix {
+  display: table-row;
+}
+
+.cellMix {
+  display: table-cell;
+  padding: 5px;
+}
+
+.rowMix:hover {
+  background-color: #b4f7f6;
+  cursor: pointer;
+}
+/*
+.cellMix:hover {
+  background-color: #e5e5e5;
+  cursor: pointer;
+}*/

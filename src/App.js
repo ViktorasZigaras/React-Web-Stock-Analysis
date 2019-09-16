@@ -17,7 +17,6 @@ class App extends PureComponent {
   }
 
   fundsGlobalCallback (value) {
-    //this.setState({ fundsGlobal: value });
     this.setState({list: value});
     //console.log(this.state.fundsGlobal);
   }
@@ -28,12 +27,12 @@ class App extends PureComponent {
         <div className="main-section">
           <Row>
             <Col>
-              <FondList setList={this.state.list} />
+              <FondList setList={this.state.list}/>
             </Col>
           </Row>
           <Row>
             <Col>
-              <FileHandling callbackFromParent={this.fundsGlobalCallback}/>
+              <FileHandling setList={this.state.list} callbackFromParent={this.fundsGlobalCallback}/>
             </Col>
           </Row>
         </div>

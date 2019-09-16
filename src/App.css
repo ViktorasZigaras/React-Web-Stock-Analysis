@@ -4,8 +4,11 @@
 
 .main-section {
   border: 1px solid #000000;
+  background-color: #e3f7f4;
   padding: 10px;
-  width: 750px;
+  width: 850px;
   margin-top: 15px;
   margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 15px;
 }

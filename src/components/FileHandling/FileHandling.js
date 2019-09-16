@@ -10,14 +10,14 @@ class FileHandling extends PureComponent {
 
     super(props)
     this.uploadFile = this.uploadFile.bind(this);
-    this.state = {file: '', list: []};
+    this.state = {file: ''};
 
   }
     
   uploadFile (event) {
   
     const file = event.target.files[0];
-    console.log(file);
+    //console.log(file);
     const reader = new FileReader();
 
     reader.onload = function(){
@@ -33,9 +33,10 @@ class FileHandling extends PureComponent {
       const iterate = function(element) {
         
         if (element.fundName === item.fundName && element.fundId === item.fundId) {
-          element.cost = Number(element.cost) + Number(item.cost);
-          element.quantity = Number(element.quantity) + Number(item.quantity);
-          element.tax = Number(element.tax) + Number(item.tax);
+          element.cost = Number(Number(element.cost) + Number(item.cost)).toFixed(2);
+          element.quantity = Number(Number(element.quantity) + Number(item.quantity)).toFixed(4);
+          element.tax = Number(Number(element.tax) + Number(item.tax)).toFixed(2);
+          element.value = Number(element.cost - element.tax).toFixed(2);
 
           createNew = false;
           
@@ -55,7 +56,7 @@ class FileHandling extends PureComponent {
         item = {};
 
         if (fundsGlobal.length > 0) {
-          item.fundName = fields[0].substring(2);//remove end of lines
+          item.fundName = fields[0].substring(2);
         }
         else {
           item.fundName = fields[0];
@@ -63,9 +64,10 @@ class FileHandling extends PureComponent {
         
         item.fundId = fields[1]/*.substring(1)*/;
         item.date = fields[2];
-        item.cost = fields[3];
+        item.cost = Number(fields[3]).toFixed(2);
         item.quantity = Number(fields[4]).toFixed(4);
-        item.tax = fields[5];
+        item.tax = Number(fields[5]).toFixed(2);
+        item.value = Number(item.cost - item.tax).toFixed(2);
         item.entries = [cloneDeep(item)];
   
         //
@@ -88,7 +90,6 @@ class FileHandling extends PureComponent {
   
       //console.log('aaa');
       this.props.callbackFromParent(fundsGlobal);
-      this.setState({list: fundsGlobal});
 
       //
 
@@ -110,9 +111,9 @@ class FileHandling extends PureComponent {
       let entry;
       let item;
 
-      for (let i = 0; i < this.state.list.length; i++) {
+      for (let i = 0; i < this.props.setList.length; i++) {
 
-        entry = this.state.list[i];
+        entry = this.props.setList[i];
 
         for (let j = 0; j < entry.entries.length; j++) {
 
