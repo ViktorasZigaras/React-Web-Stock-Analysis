@@ -1,0 +1,33 @@
+.purchase-display-section {
+    width: 825px;
+    height: 300px;
+    overflow-y: auto;
+    background-color: #d9e6f7;
+    border: 1px solid #000000;
+    margin-left: 15px;
+    margin-top: 10px;
+}
+  
+.table-mix {
+    display: table;
+    width: 100%;
+}
+  
+.row-mix {
+    display: table-row;
+}
+  
+.cell-mix {
+    display: table-cell;
+    padding: 5px;
+    border: 1px solid #000000;
+}
+  
+.row-mix:hover {
+    background-color: #b4f7f6;
+    cursor: pointer;
+}
+  
+.cell-mix-header:hover {
+    background-color: #f9e8c5;
+}
