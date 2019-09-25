@@ -17,11 +17,12 @@ class FondInfo extends PureComponent {
   render() {
 
     let fondInfo = null;
-    const currency = 'EUR'; //&nbsp;
-    let changeTrajectory = '';
 
     if (this.props.selectedFond) {
+      //const fond = [...this.props.selectedFond];
       const fond = this.props.selectedFond;
+      const currency = 'EUR'; //&nbsp;
+      let changeTrajectory = '';
 
       if (fond.valueChange > 0) {
         changeTrajectory = '+';
@@ -48,7 +49,7 @@ class FondInfo extends PureComponent {
         <p style={fond.valueChange > 0 ? {color:'green'}: {color:'red'}} className="main-label">
           Total Value Change: {changeTrajectory}{fond.valueChange} {currency}
         </p>
-        <p style={fond.valueChange > 0 ? {color:'green'}: {color:'red'}} className="main-label">
+        <p style={fond.valuePercentChange > 0 ? {color:'green'}: {color:'red'}} className="main-label">
           Change: {changeTrajectory}{fond.valuePercentChange}%
         </p>
       </div>;

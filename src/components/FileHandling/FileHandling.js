@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { /*Col, */Row, Button } from 'reactstrap';
+import { Col, Row, Button } from 'reactstrap';
 import './FileHandling.css';
 import cloneDeep from 'lodash/cloneDeep';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -73,7 +73,7 @@ class FileHandling extends PureComponent {
         //
   
         if (fundsGlobal.length > 0) {
-          fundsGlobal.forEach(element => {
+          fundsGlobal.forEach((element) => {
             iterate(element);
           });
           if (createNew) {
@@ -90,6 +90,7 @@ class FileHandling extends PureComponent {
   
       //console.log('aaa');
       this.props.callbackFromParent(fundsGlobal);
+      this.props.clearLists();
 
       //
 
@@ -119,7 +120,7 @@ class FileHandling extends PureComponent {
 
           item = entry.entries[j];
 
-          data += item.fundName + ',' + item.fundId + ',' + item.date + ','
+          data += entry.fundName + ',' + entry.fundId + ',' + item.date + ','
           + item.cost + ',' + item.quantity + ',' + item.tax + ';\r\n';
 
         }
@@ -134,11 +135,13 @@ class FileHandling extends PureComponent {
 
   render() {
     return (
-      <Row>
-        <input type="file" id="open" onChange={this.uploadFile} />
-        <label htmlFor="open" className="open-button">Upload file</label>
-        <Button color="primary" className="save-button" onClick={()=>this.onSaveList()}>Save list</Button>
-      </Row>
+      <Col>
+        <Row>
+          <input type="file" id="open" onChange={this.uploadFile} />
+          <label htmlFor="open" className="open-button">Upload file</label>
+          <Button color="primary" className="save-button" onClick={()=>this.onSaveList()}>Save list</Button>
+        </Row>
+      </Col>
     );
   }
 

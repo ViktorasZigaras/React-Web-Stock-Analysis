@@ -68,6 +68,9 @@ class FondList extends PureComponent {
     })
     .catch((error) => {
       console.error('Error: ' + error);
+      alert('Wrong ID number! Please find correct one and change to it.');
+      const updatedFond = { ...fond };
+      this.props.callbackFromParent(updatedFond);
     });
     
   }
@@ -75,7 +78,7 @@ class FondList extends PureComponent {
   render() {
 
     const fonds = [];
-
+    //console.log(this.props.setList + ' list');
     this.props.setList.forEach((entry) => { 
 
       fonds.push(
@@ -89,7 +92,6 @@ class FondList extends PureComponent {
       <div className="left-section">
         {fonds}
       </div>
-      
     );
 
   }
