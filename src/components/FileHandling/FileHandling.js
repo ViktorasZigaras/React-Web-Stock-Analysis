@@ -5,23 +5,18 @@ import cloneDeep from 'lodash/cloneDeep';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class FileHandling extends PureComponent {
-
   constructor(props) {
-
     super(props)
     this.uploadFile = this.uploadFile.bind(this);
     this.state = {file: ''};
-
   }
     
   uploadFile (event) {
-  
     const file = event.target.files[0];
     //console.log(file);
     const reader = new FileReader();
 
-    reader.onload = function(){
-        
+    reader.onload = function(){ 
       let result = reader.result;
       let index = result.indexOf(";");
       let chunk;
@@ -31,7 +26,6 @@ class FileHandling extends PureComponent {
       let fundsGlobal = [];
 
       const iterate = function(element) {
-        
         if (element.fundName === item.fundName && element.fundId === item.fundId) {
           element.cost = Number(Number(element.cost) + Number(item.cost)).toFixed(2);
           element.quantity = Number(Number(element.quantity) + Number(item.quantity)).toFixed(4);
@@ -46,7 +40,6 @@ class FileHandling extends PureComponent {
           createNew = true;
           return;
         }
-        
       }
   
       while (index !== -1) {
@@ -55,11 +48,9 @@ class FileHandling extends PureComponent {
   
         item = {};
 
+        item.fundName = fields[0];
         if (fundsGlobal.length > 0) {
-          item.fundName = fields[0].substring(2);
-        }
-        else {
-          item.fundName = fields[0];
+          item.fundName = item.fundName.substring(2);
         }
         
         item.fundId = fields[1]/*.substring(1)*/;
@@ -69,8 +60,6 @@ class FileHandling extends PureComponent {
         item.tax = Number(fields[5]).toFixed(2);
         item.value = Number(item.cost - item.tax).toFixed(2);
         item.entries = [cloneDeep(item)];
-  
-        //
   
         if (fundsGlobal.length > 0) {
           fundsGlobal.forEach((element) => {
@@ -88,49 +77,36 @@ class FileHandling extends PureComponent {
         index = result.indexOf(';');
       }
   
-      //console.log('aaa');
       this.props.callbackFromParent(fundsGlobal);
       this.props.clearLists();
-
-      //
-
-      //
-
     }.bind(this);
   
     reader.readAsText(file);
-
     this.setState({file: file});
-  
   }
   
   onSaveList () {
-    
     if (this.state.file) {
-      
       let data = '';
       let entry;
       let item;
 
       for (let i = 0; i < this.props.setList.length; i++) {
-
         entry = this.props.setList[i];
 
         for (let j = 0; j < entry.entries.length; j++) {
-
           item = entry.entries[j];
 
           data += entry.fundName + ',' + entry.fundId + ',' + item.date + ','
           + item.cost + ',' + item.quantity + ',' + item.tax + ';\r\n';
-
         }
-        
       }
 
       require("downloadjs")(data, this.state.file.name, 'text/plain');
-
     }
-    
+    else {
+      alert('No file was loaded, saving is not permitted.');
+    }
   }
 
   render() {
@@ -144,7 +120,6 @@ class FileHandling extends PureComponent {
       </Col>
     );
   }
-
 }
 
 export default FileHandling;

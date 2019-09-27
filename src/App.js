@@ -9,9 +9,7 @@ import FileHandling from '../src/components/FileHandling/FileHandling.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends PureComponent {
-
   constructor(props) {
-
     super(props);
     this.state = {
       list: [],
@@ -27,21 +25,16 @@ class App extends PureComponent {
     this.selectedUpdated = this.selectedUpdated.bind(this);
     this.myRef = React.createRef();
     this.controlsReference = this.myRef;
-    
   }
 
   fundsGlobalCallback (value) {
     this.setState({list: value.sort((a, b) => (a.fundName > b.fundName) ? 1 : -1)});
-    //console.log(this.state.list);
   }
-
-  //fundChangeCallback ()
 
   selectedFundsGlobalCallback (value) {
     this.setState({selectedFond: value});
     this.controlsReference.current.setState({fundName: value.fundName});
     this.controlsReference.current.setState({fundId: value.fundId});
-    //console.log(this.state.fundsGlobal);
   }
 
   selectedItem (value) {
@@ -66,7 +59,7 @@ class App extends PureComponent {
 
   selectedUpdated (value) {
     this.setState({selectedFond: value});
-
+    //console.log(value.cost + ' t ' + value.quantity);
     const funds = [...this.state.list];
     funds.forEach((fund) => { 
       if (fund.fundName === value.fundName && fund.fundId === value.fundId) {
@@ -78,7 +71,6 @@ class App extends PureComponent {
         fund.valueChange = value.valueChange;
         fund.valuePercentChange = value.valuePercentChange;
 
-        //fund = value;
         this.setState({list: funds});
         return;
       }
@@ -135,8 +127,7 @@ class App extends PureComponent {
         </div>
       </Container>
     );
-  }
-    
+  } 
 }
 
 export default App;

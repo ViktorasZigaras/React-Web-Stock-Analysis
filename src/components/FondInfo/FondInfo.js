@@ -4,31 +4,29 @@ import './FondInfo.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class FondInfo extends PureComponent {
-  
   constructor(props) {
-
     super(props);
     this.state = {
       //selectedFond: null
     }
-
   };
 
   render() {
-
     let fondInfo = null;
 
     if (this.props.selectedFond) {
-      //const fond = [...this.props.selectedFond];
       const fond = this.props.selectedFond;
       const currency = 'EUR'; //&nbsp;
       let changeTrajectory = '';
+      
+      if (fond.value < 0) {
+        fond.valuePercentChange *= -1;
+      }
 
       if (fond.valueChange > 0) {
         changeTrajectory = '+';
       }
   
-      //<div className="flex">
       fondInfo = 
       <div>
         <p className="main-label">
@@ -53,18 +51,14 @@ class FondInfo extends PureComponent {
           Change: {changeTrajectory}{fond.valuePercentChange}%
         </p>
       </div>;
-
     }
       
     return (
       <div className="right-section">
         {fondInfo}
       </div>
-      
     );
-
   }
-
 }
 
 export default FondInfo;

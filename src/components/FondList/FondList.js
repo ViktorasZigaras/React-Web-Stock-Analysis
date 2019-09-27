@@ -6,7 +6,6 @@ import axios from 'axios';
 import location from '../../config.js';
 
 class FondList extends PureComponent {
-  
   constructor(props) {
 
     super(props);
@@ -16,20 +15,13 @@ class FondList extends PureComponent {
     }
 
   };
-  
-  /*componentDidMount(){
-    //console.log(location);
-  }*/
 
   onClickFond(fond) {
-
     if (fond.shareValue) {
       this.props.callbackFromParent(fond);
-      //this.setState({selectedFond: fond});
       return;
     }
 
-    //
     const newDate = new Date()
     const date = newDate.getDate();
     let prevDate = date;
@@ -40,7 +32,6 @@ class FondList extends PureComponent {
 
     if (prevDate > 30) {
       prevDate = 30;
-
       if (prevMonth === 2) {
         prevDate = 28;
       }
@@ -53,7 +44,7 @@ class FondList extends PureComponent {
 
     const url = location + 'http://luminor-funds.metasite.lt/funds/funds/getJson/' +
     prevYear + '-' + prevMonth + '-' + date + '/' + year + '-' + month + '-' + date + '/fund_' + fond.fundId;
-    //console.log(url);
+    console.log(url);
 
     axios.get(url)
     .then((res) => {
@@ -76,16 +67,12 @@ class FondList extends PureComponent {
   }
 
   render() {
-
     const fonds = [];
-    //console.log(this.props.setList + ' list');
     this.props.setList.forEach((entry) => { 
-
       fonds.push(
       <p key={entry.fundName} className="hover-item" onClick={()=>this.onClickFond(entry)}>
         {entry.fundName} ({entry.fundId})
       </p>);
-        
     });
       
     return (
@@ -93,9 +80,7 @@ class FondList extends PureComponent {
         {fonds}
       </div>
     );
-
   }
-
 }
 
 export default FondList;

@@ -4,15 +4,12 @@ import './Purchases.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Purchases extends PureComponent {
-  
   constructor(props) {
-
     super(props);
     this.state = {
       sortDirection: 'asc', 
       lastSortColumn: ''
     }
-
   };
 
   onClickPurchase(purchase) {
@@ -20,8 +17,6 @@ class Purchases extends PureComponent {
   }
 
   onClickSort(field) {
-    //console.log('field: ' + field +  ', last field: ' + this.state.lastSortColumn + ', direction: ' + this.state.sortDirection);
-
     let sortDirection = 'asc';
     let direction = 1;
     if (this.state.lastSortColumn === field && this.state.sortDirection === 'asc') {
@@ -36,15 +31,11 @@ class Purchases extends PureComponent {
       this.props.selectedFond.entries.sort((a, b) => (Number(a[field]) > Number(b[field])) ? direction : -direction);
     }
 
-    //
-
     this.setState({lastSortColumn: field});
     this.setState({sortDirection: sortDirection});
-
   }
 
   render() {
-
     const purchases = [];
 
     if (this.props.selectedFond) {
@@ -84,12 +75,11 @@ class Purchases extends PureComponent {
         let i = 0;
 
         fond.entries.forEach((entry) => { 
-
           i++;
           entry.totalValue = Number(entry.quantity * fond.shareValue).toFixed(2);
           entry.valueChange = Number(entry.totalValue - entry.value).toFixed(2);
           entry.valuePercentChange = Number((entry.valueChange/entry.value) * 100).toFixed(2);
-
+          
           if (entry.value < 0) {
             entry.valuePercentChange *= -1;
           }
@@ -141,9 +131,7 @@ class Purchases extends PureComponent {
         </div>
       </div>
     );
-
   }
-
 }
 
 export default Purchases;
