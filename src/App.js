@@ -11,11 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 class App extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      list: [],
-      selectedEntry: null,
-      selectedFond: null
-    };
+    this.state = {list: [], selectedEntry: null, selectedFond: null};
 
     this.fundsGlobalCallback = this.fundsGlobalCallback.bind(this);
     this.selectedFundsGlobalCallback = this.selectedFundsGlobalCallback.bind(this);
@@ -33,48 +29,30 @@ class App extends PureComponent {
 
   selectedFundsGlobalCallback (value) {
     this.setState({selectedFond: value});
-    this.controlsReference.current.setState({fundName: value.fundName});
-    this.controlsReference.current.setState({fundId: value.fundId});
+    this.controlsReference.current.setState({fundName: value.fundName, fundId: value.fundId});
   }
 
   selectedItem (value) {
     this.setState({selectedEntry: value});
-    this.controlsReference.current.setState({itemDate: value.date});
-    this.controlsReference.current.setState({itemAmount: value.cost});
-    this.controlsReference.current.setState({itemQuantity: value.quantity});
-    this.controlsReference.current.setState({itemTax: value.tax});
+    this.controlsReference.current.setState({
+      itemDate: value.date, itemAmount: value.cost, itemQuantity: value.quantity, itemTax: value.tax});
   }
 
   updateFund (name, id) {
     const funds = [...this.state.list];
-    funds.forEach((fund) => { 
-      if (fund.fundName === this.state.selectedFond.fundName && fund.fundId === this.state.selectedFond.fundId) {
-        fund.fundName = name;
-        fund.fundId = id;
-        this.setState({list: funds.sort((a, b) => (a.fundName > b.fundName) ? 1 : -1)});
-        return;
-      }
-    });
+    const updatedList = this.state.selectedFond;
+    const fund = funds.find(obj => obj.fundName === updatedList.fundName && obj.fundId === updatedList.fundId);
+    fund.fundName = name;
+    fund.fundId = id;
+    updatedList.fundName = name;
+    updatedList.fundId = id;
+    this.setState({list: funds.sort((a, b) => (a.fundName > b.fundName) ? 1 : -1)});
   }
 
   selectedUpdated (value) {
     this.setState({selectedFond: value});
-    //console.log(value.cost + ' t ' + value.quantity);
-    const funds = [...this.state.list];
-    funds.forEach((fund) => { 
-      if (fund.fundName === value.fundName && fund.fundId === value.fundId) {
-        fund.cost = value.cost;
-        fund.quantity = value.quantity;
-        fund.tax = value.tax;
-        fund.value = value.value;
-        fund.totalValue = value.totalValue;
-        fund.valueChange = value.valueChange;
-        fund.valuePercentChange = value.valuePercentChange;
-
-        this.setState({list: funds});
-        return;
-      }
-    });
+    Object.assign([...this.state.list].find(obj => 
+      obj.fundName === value.fundName && obj.fundId === value.fundId), value);
   }
 
   clearLists () {

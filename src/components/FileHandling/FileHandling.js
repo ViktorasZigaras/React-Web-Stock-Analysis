@@ -2,7 +2,10 @@ import React, { PureComponent } from 'react';
 import { Col, Row, Button } from 'reactstrap';
 import './FileHandling.css';
 import cloneDeep from 'lodash/cloneDeep';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import {
+  substractNumbers, 
+  addNumbers, 
+  convertNumbers} from '../../Helpers/NumericHelper.js';
 
 class FileHandling extends PureComponent {
   constructor(props) {
@@ -15,7 +18,6 @@ class FileHandling extends PureComponent {
     const file = event.target.files[0];
     //console.log(file);
     const reader = new FileReader();
-
     reader.onload = function(){ 
       let result = reader.result;
       let index = result.indexOf(";");
@@ -24,16 +26,13 @@ class FileHandling extends PureComponent {
       let item;
       let createNew;
       let fundsGlobal = [];
-
       const iterate = function(element) {
         if (element.fundName === item.fundName && element.fundId === item.fundId) {
-          element.cost = Number(Number(element.cost) + Number(item.cost)).toFixed(2);
-          element.quantity = Number(Number(element.quantity) + Number(item.quantity)).toFixed(4);
-          element.tax = Number(Number(element.tax) + Number(item.tax)).toFixed(2);
-          element.value = Number(element.cost - element.tax).toFixed(2);
-
+          element.cost = addNumbers(element.cost, item.cost, 2);
+          element.quantity = addNumbers(element.quantity, item.quantity, 4);
+          element.tax = addNumbers(element.tax, item.tax, 2);
+          element.value = substractNumbers(element.cost, element.tax, 2);
           createNew = false;
-          
           element.entries.push(item);
         }
         else {
@@ -41,72 +40,59 @@ class FileHandling extends PureComponent {
           return;
         }
       }
-  
       while (index !== -1) {
         chunk = result.substring(0, index);
         fields = chunk.split(',');
-  
-        item = {};
-
-        item.fundName = fields[0];
-        if (fundsGlobal.length > 0) {
-          item.fundName = item.fundName.substring(2);
-        }
-        
-        item.fundId = fields[1]/*.substring(1)*/;
-        item.date = fields[2];
-        item.cost = Number(fields[3]).toFixed(2);
-        item.quantity = Number(fields[4]).toFixed(4);
-        item.tax = Number(fields[5]).toFixed(2);
-        item.value = Number(item.cost - item.tax).toFixed(2);
+        item = {
+          fundName: fields[0],
+          fundId: fields[1], 
+          date: fields[2], 
+          cost: convertNumbers(fields[3], 2),
+          quantity: convertNumbers(fields[4], 4),
+          tax: convertNumbers(fields[5], 2)
+        };
+        item.value = substractNumbers(item.cost, item.tax, 2);
+        if (fundsGlobal.length > 0) {item.fundName = item.fundName.substring(2);}
         item.entries = [cloneDeep(item)];
-  
         if (fundsGlobal.length > 0) {
-          fundsGlobal.forEach((element) => {
-            iterate(element);
-          });
-          if (createNew) {
-            fundsGlobal.push(item);
-          }
+          fundsGlobal.forEach((element) => {iterate(element);});
+          if (createNew) {fundsGlobal.push(item);}
         }
-        else {
-          fundsGlobal.push(item);
-        }
-  
+        else {fundsGlobal.push(item);}
         result = result.substring(index + 1);
         index = result.indexOf(';');
       }
-  
       this.props.callbackFromParent(fundsGlobal);
       this.props.clearLists();
     }.bind(this);
-  
     reader.readAsText(file);
     this.setState({file: file});
   }
   
   onSaveList () {
-    if (this.state.file) {
+    if (this.state.file && this.props.setList) {
       let data = '';
       let entry;
       let item;
-
       for (let i = 0; i < this.props.setList.length; i++) {
         entry = this.props.setList[i];
-
-        for (let j = 0; j < entry.entries.length; j++) {
-          item = entry.entries[j];
-
-          data += entry.fundName + ',' + entry.fundId + ',' + item.date + ','
-          + item.cost + ',' + item.quantity + ',' + item.tax + ';\r\n';
+        if (entry.entries) {
+          for (let j = 0; j < entry.entries.length; j++) {
+            item = entry.entries[j];
+            data += 
+              entry.fundName + ',' + 
+              entry.fundId + ',' + 
+              item.date + ',' + 
+              item.cost + ',' + 
+              item.quantity + ',' + 
+              item.tax + ';\r\n'
+            ;
+          }
         }
       }
-
       require("downloadjs")(data, this.state.file.name, 'text/plain');
     }
-    else {
-      alert('No file was loaded, saving is not permitted.');
-    }
+    else {alert('No file was loaded, saving is not permitted.');}
   }
 
   render() {

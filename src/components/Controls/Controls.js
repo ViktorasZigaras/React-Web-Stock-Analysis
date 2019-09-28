@@ -1,155 +1,119 @@
 import React, { PureComponent } from 'react';
 import './Controls.css';
 import { Input, Button, Row } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import {
+  substractNumbers, 
+  addNumbers, 
+  multiplyNumbers,
+  removeAndAddNumbers,
+  percentDivisionNumbers} from '../../Helpers/NumericHelper.js';
 
 class Controls extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-        fundName: '',
-        fundId: '',
-        itemDate: '',
-        itemAmount: '',
-        itemQuantity: '',
-        itemTax: ''
-    };
+    this.state = {fundName: '', fundId: '', itemDate: '', itemAmount: '', itemQuantity: '', itemTax: ''};
   }
 
-  onNameChangedHandler(event) {
-    this.setState({fundName: event.target.value});
-  }
-
-  onIdChangedHandler(event) {
-    this.setState({fundId: event.target.value});
-  }
-
-  onDateChangedHandler(event) {
-    this.setState({itemDate: event.target.value});
-  }
-
-  onAmountChangedHandler(event) {
-    this.setState({itemAmount: event.target.value});
-  }
-
-  onQuantityChangedHandler(event) {
-    this.setState({itemQuantity: event.target.value});
-  }
-
-  onTaxChangedHandler(event) {
-    this.setState({itemTax: event.target.value});
+  onChangedHandler(event) {
+    this.setState({[event.target.id]: event.target.value});
   }
 
   onCreateFund() {
     const funds = [...this.props.setList];
-    let matchFound = false;
-
-    funds.forEach((fund) => { 
-      if (fund.fundName === this.state.fundName || fund.fundId === this.state.fundId) {
-        matchFound = true;
-        console.warn('Duplicate fund found.');
-        alert('Duplicate fund found. Change either name or ID or both.');
-        return;
-      }
-    });
-
-    if (!matchFound) {
-      let newFund = {};
-      newFund.fundName = this.state.fundName;
-      newFund.fundId = this.state.fundId;
-      funds.push(newFund);
+    if (funds.find(obj => obj.fundName === this.state.fundName && obj.fundId === this.state.fundId)) {
+      alert('Duplicate fund found. Change either name or ID or both.');
+    }
+    else {
+      funds.push({fundName: this.state.fundName, fundId: this.state.fundId, entries: []});
       this.props.callbackFromParent(funds);
     }
   }
 
   onUpdateFund() {
-    this.props.updateFund(this.state.fundName, this.state.fundId);
+    if (this.props.selectedFond) {this.props.updateFund(this.state.fundName, this.state.fundId);}
+    else {alert('No Fund is selected, please do that first.');}
   }
 
   onDeleteFund() {
-    const funds = [...this.props.setList];
-
-    for (let i = 0; i < funds.length; i++) {
-      if (funds[i].fundName === this.state.fundName && funds[i].fundId === this.state.fundId) {
-        funds.splice(i, 1);
-        this.props.callbackFromParent(funds);
-        this.props.clearLists();
-        return;
+    if (this.props.selectedFond) {
+      const funds = [...this.props.setList];
+      let fund;
+      for (let i = 0; i < funds.length; i++) {
+        fund = funds[i];
+        if (fund.fundName === this.state.fundName && fund.fundId === this.state.fundId) {
+          funds.splice(i, 1);
+          this.props.callbackFromParent(funds);
+          this.props.clearLists();
+          return;
+        }
       }
     }
+    else {alert('No Fund is selected, please do that first.');}
   }
 
   onCreateItem() {
-    let list = {...this.props.selectedFond};
-
-    let item = this.setUpItem({});
-    
-    list.cost = Number(Number(list.cost) + Number(item.cost)).toFixed(2);
-    list.quantity = Number(Number(list.quantity) + Number(item.quantity)).toFixed(4);
-    list.tax = Number(Number(list.tax) + Number(item.tax)).toFixed(2);
-    list.value = Number(Number(list.value) + Number(item.value)).toFixed(2);
-
-    list = this.recalculateList(list);
-      
-    list.entries.push(item);
-    list.entries.sort((a, b) => (a['date'] > b['date']) ? 1 : -1);
-    this.props.selectedUpdated(list);
+    if (this.props.selectedFond) {
+      let list = {...this.props.selectedFond};
+      let item = this.setUpItem({});
+      list.cost = addNumbers(list.cost, item.cost, 2);
+      list.quantity = addNumbers(list.quantity, item.quantity, 4);
+      list.tax = addNumbers(list.tax, item.tax, 2);
+      list.value = addNumbers(list.value, item.value, 2);
+      this.recalculateList(list);
+      list.entries.push(item);
+      list.entries.sort((a, b) => (a['date'] > b['date']) ? 1 : -1);
+      this.props.selectedUpdated(list);
+    }
+    else {alert('No Fund is selected, please do that first.');}
   }
 
   onUpdateItem() {
-    let list = {...this.props.selectedFond};
-    const funds = list.entries;
-    let item;
-
-    for (let i = 0; i < funds.length; i++) {
-      item = funds[i];
-      //console.log(item.date + ' dd ' + this.state.itemDate);
-      if (item.date === this.props.selectedEntry.date 
-        && item.cost === this.props.selectedEntry.cost 
-        && item.quantity === this.props.selectedEntry.quantity 
-        && item.tax === this.props.selectedEntry.tax) {
-
+    if (this.props.selectedEntry) {
+      let list = {...this.props.selectedFond};
+      const funds = list.entries;
+      let item = funds.find(obj => 
+        obj.date === this.props.selectedEntry.date 
+        && obj.cost === this.props.selectedEntry.cost 
+        && obj.quantity === this.props.selectedEntry.quantity 
+        && obj.tax === this.props.selectedEntry.tax);
+      if (item) {
         let value = this.state.itemAmount - this.state.itemTax;
-
-        list.cost = Number(list.cost - item.cost + Number(this.state.itemAmount)).toFixed(2);
-        list.quantity = Number(list.quantity - item.quantity + Number(this.state.itemQuantity)).toFixed(4);
-        list.tax = Number(list.tax - item.tax + Number(this.state.itemTax)).toFixed(2);
-        list.value = Number(list.value - item.value + Number(value)).toFixed(2);
-
-        funds[i] = this.setUpItem(item);
-      
-        list = this.recalculateList(list);
-
+        list.cost = removeAndAddNumbers(list.cost, item.cost, this.state.itemAmount, 2);
+        list.quantity = removeAndAddNumbers(list.quantity, item.quantity, this.state.itemQuantity, 4);
+        list.tax = removeAndAddNumbers(list.tax, item.tax, this.state.itemTax, 2);
+        list.value = removeAndAddNumbers(list.value, item.value, value, 2);
+        this.setUpItem(item);
+        this.recalculateList(list);
         this.props.selectedUpdated(list);
-        return;
       }
-    } 
+    }
+    else {alert('No Purchase is selected, please do that first.');}
   }
 
   onDeleteItem() {
-    let list = {...this.props.selectedFond};
-    const funds = list.entries;
-    let item;
-
-    for (let i = 0; i < funds.length; i++) {
-      item = funds[i];
-      if (item.date === this.state.itemDate 
-        && item.cost === this.state.itemAmount 
-        && item.quantity === this.state.itemQuantity 
-        && item.tax === this.state.itemTax) {
-
-        list.cost = Number(list.cost - item.cost).toFixed(2);
-        list.quantity = Number(list.quantity - item.quantity).toFixed(4);
-        list.tax = Number(list.tax - item.tax).toFixed(2);
-        list.value = Number(list.value - item.value).toFixed(2);
-      
-        list = this.recalculateList(list);
-        
-        funds.splice(i, 1);
-        this.props.selectedUpdated(list);
-        return;
-      }
-    }    
+    if (this.props.selectedEntry) {
+      let list = {...this.props.selectedFond};
+      const funds = list.entries;
+      let item;
+      for (let i = 0; i < funds.length; i++) {
+        item = funds[i];
+        if (item.date === this.state.itemDate 
+          && item.cost === this.state.itemAmount 
+          && item.quantity === this.state.itemQuantity 
+          && item.tax === this.state.itemTax) 
+        {
+          list.cost = substractNumbers(list.cost, item.cost, 2);
+          list.quantity = substractNumbers(list.quantity, item.quantity, 4);
+          list.tax = substractNumbers(list.tax, item.tax, 2);
+          list.value = substractNumbers(list.value, item.value, 2);
+          this.recalculateList(list);
+          funds.splice(i, 1);
+          this.props.selectedUpdated(list);
+          return;
+        }
+      }  
+    }
+    else {alert('No Purchase is selected, please do that first.');}   
   }
 
   setUpItem(item) {
@@ -157,15 +121,15 @@ class Controls extends PureComponent {
     item.cost = this.state.itemAmount;
     item.quantity = this.state.itemQuantity;
     item.tax = this.state.itemTax;
-    item.value = Number(item.cost - item.tax).toFixed(2);
+    item.value = substractNumbers(item.cost, item.tax, 2);
     return item;
   }
 
   recalculateList(list) {
-    list.totalValue = Number(list.quantity * list.shareValue).toFixed(2);
-    list.valueChange = Number(list.totalValue - list.value).toFixed(2);
-    list.valuePercentChange = Number((list.valueChange/list.value) * 100).toFixed(2);
-    return list;
+    list.totalValue = multiplyNumbers(list.quantity, list.shareValue, 2);
+    list.valueChange = substractNumbers(list.totalValue, list.value, 2);
+    list.valuePercentChange = percentDivisionNumbers(list.valueChange, list.value, 2);
+    //return list;
   }
 
   render() {
@@ -173,15 +137,17 @@ class Controls extends PureComponent {
       <div className="control-section">
         <Input 
           value={this.state.fundName} 
-          onChange={this.onNameChangedHandler.bind(this)} 
+          onChange={this.onChangedHandler.bind(this)} 
           className="spacing"
+          id="fundName"
           placeholder="Fund Name"/>
         <Input 
           value={this.state.fundId} 
-          onChange={this.onIdChangedHandler.bind(this)} 
+          onChange={this.onChangedHandler.bind(this)} 
           className="spacing"
+          id="fundId"
           placeholder="Fund ID"/>
-        <Row className="left">
+        <Row>
           <Button 
             color="primary" 
             className="spacing right" 
@@ -197,25 +163,29 @@ class Controls extends PureComponent {
           onClick={()=>this.onDeleteFund()}>Delete Fund</Button>
         <Input 
           value={this.state.itemDate} 
-          onChange={this.onDateChangedHandler.bind(this)} 
+          onChange={this.onChangedHandler.bind(this)} 
           className="spacing"
+          id="itemDate"
           placeholder="Item Date"/>
         <Input 
           value={this.state.itemAmount} 
-          onChange={this.onAmountChangedHandler.bind(this)} 
+          onChange={this.onChangedHandler.bind(this)} 
           className="spacing"
+          id="itemAmount"
           placeholder="Item Amount"/>
         <Input 
           value={this.state.itemQuantity} 
-          onChange={this.onQuantityChangedHandler.bind(this)} 
+          onChange={this.onChangedHandler.bind(this)} 
           className="spacing"
+          id="itemQuantity"
           placeholder="Item Quantity"/>
         <Input 
           value={this.state.itemTax} 
-          onChange={this.onTaxChangedHandler.bind(this)} 
+          onChange={this.onChangedHandler.bind(this)} 
           className="spacing"
+          id="itemTax"
           placeholder="Item Tax"/>
-        <Row className="left">
+        <Row>
           <Button 
             color="primary" 
             className="spacing right" 
@@ -229,7 +199,6 @@ class Controls extends PureComponent {
           color="primary" 
           className="spacing" 
           onClick={()=>this.onDeleteItem()}>Delete Item</Button>
-        
       </div>
     );
   }

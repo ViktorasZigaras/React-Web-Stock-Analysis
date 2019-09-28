@@ -14,10 +14,7 @@
     margin-bottom: 5px;
 }
 
-.left {
-    margin-left: 0px;
-}
-
 .right {
     margin-right: 5px;
+    margin-left: 15px;
 }
