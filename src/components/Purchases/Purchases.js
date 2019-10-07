@@ -69,9 +69,9 @@ class Purchases extends PureComponent {
         let i = 0;
         fond.entries.forEach((entry) => { 
           i++;
-          entry.totalValue = multiplyNumbers(entry.quantity, fond.shareValue, 2);
-          entry.valueChange = substractNumbers(entry.totalValue, entry.value, 2);
-          entry.valuePercentChange = percentDivisionNumbers(entry.valueChange, entry.value, 2);
+          entry.totalValue = multiplyNumbers(entry.quantity, fond.shareValue);
+          entry.valueChange = substractNumbers(entry.totalValue, entry.value);
+          entry.valuePercentChange = percentDivisionNumbers(entry.valueChange, entry.value);
           if (entry.value < 0) {entry.valuePercentChange *= -1;}
           changeTrajectory = '';
           if (entry.valueChange > 0) {changeTrajectory = '+';}

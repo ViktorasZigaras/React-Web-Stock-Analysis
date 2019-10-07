@@ -55,10 +55,10 @@ class Controls extends PureComponent {
     if (this.props.selectedFond) {
       let list = {...this.props.selectedFond};
       let item = this.setUpItem({});
-      list.cost = addNumbers(list.cost, item.cost, 2);
+      list.cost = addNumbers(list.cost, item.cost);
       list.quantity = addNumbers(list.quantity, item.quantity, 4);
-      list.tax = addNumbers(list.tax, item.tax, 2);
-      list.value = addNumbers(list.value, item.value, 2);
+      list.tax = addNumbers(list.tax, item.tax);
+      list.value = addNumbers(list.value, item.value);
       this.recalculateList(list);
       list.entries.push(item);
       list.entries.sort((a, b) => (a['date'] > b['date']) ? 1 : -1);
@@ -78,10 +78,10 @@ class Controls extends PureComponent {
         && obj.tax === this.props.selectedEntry.tax);
       if (item) {
         let value = this.state.itemAmount - this.state.itemTax;
-        list.cost = removeAndAddNumbers(list.cost, item.cost, this.state.itemAmount, 2);
+        list.cost = removeAndAddNumbers(list.cost, item.cost, this.state.itemAmount);
         list.quantity = removeAndAddNumbers(list.quantity, item.quantity, this.state.itemQuantity, 4);
-        list.tax = removeAndAddNumbers(list.tax, item.tax, this.state.itemTax, 2);
-        list.value = removeAndAddNumbers(list.value, item.value, value, 2);
+        list.tax = removeAndAddNumbers(list.tax, item.tax, this.state.itemTax);
+        list.value = removeAndAddNumbers(list.value, item.value, value);
         this.setUpItem(item);
         this.recalculateList(list);
         this.props.selectedUpdated(list);
@@ -102,10 +102,10 @@ class Controls extends PureComponent {
           && item.quantity === this.state.itemQuantity 
           && item.tax === this.state.itemTax) 
         {
-          list.cost = substractNumbers(list.cost, item.cost, 2);
+          list.cost = substractNumbers(list.cost, item.cost);
           list.quantity = substractNumbers(list.quantity, item.quantity, 4);
-          list.tax = substractNumbers(list.tax, item.tax, 2);
-          list.value = substractNumbers(list.value, item.value, 2);
+          list.tax = substractNumbers(list.tax, item.tax);
+          list.value = substractNumbers(list.value, item.value);
           this.recalculateList(list);
           funds.splice(i, 1);
           this.props.selectedUpdated(list);
@@ -121,14 +121,14 @@ class Controls extends PureComponent {
     item.cost = this.state.itemAmount;
     item.quantity = this.state.itemQuantity;
     item.tax = this.state.itemTax;
-    item.value = substractNumbers(item.cost, item.tax, 2);
+    item.value = substractNumbers(item.cost, item.tax);
     return item;
   }
 
   recalculateList(list) {
-    list.totalValue = multiplyNumbers(list.quantity, list.shareValue, 2);
-    list.valueChange = substractNumbers(list.totalValue, list.value, 2);
-    list.valuePercentChange = percentDivisionNumbers(list.valueChange, list.value, 2);
+    list.totalValue = multiplyNumbers(list.quantity, list.shareValue);
+    list.valueChange = substractNumbers(list.totalValue, list.value);
+    list.valuePercentChange = percentDivisionNumbers(list.valueChange, list.value);
     //return list;
   }
 

@@ -28,10 +28,10 @@ class FileHandling extends PureComponent {
       let fundsGlobal = [];
       const iterate = function(element) {
         if (element.fundName === item.fundName && element.fundId === item.fundId) {
-          element.cost = addNumbers(element.cost, item.cost, 2);
+          element.cost = addNumbers(element.cost, item.cost);
           element.quantity = addNumbers(element.quantity, item.quantity, 4);
-          element.tax = addNumbers(element.tax, item.tax, 2);
-          element.value = substractNumbers(element.cost, element.tax, 2);
+          element.tax = addNumbers(element.tax, item.tax);
+          element.value = substractNumbers(element.cost, element.tax);
           createNew = false;
           element.entries.push(item);
         }
@@ -47,11 +47,11 @@ class FileHandling extends PureComponent {
           fundName: fields[0],
           fundId: fields[1], 
           date: fields[2], 
-          cost: convertNumbers(fields[3], 2),
+          cost: convertNumbers(fields[3]),
           quantity: convertNumbers(fields[4], 4),
-          tax: convertNumbers(fields[5], 2)
+          tax: convertNumbers(fields[5])
         };
-        item.value = substractNumbers(item.cost, item.tax, 2);
+        item.value = substractNumbers(item.cost, item.tax);
         if (fundsGlobal.length > 0) {item.fundName = item.fundName.substring(2);}
         item.entries = [cloneDeep(item)];
         if (fundsGlobal.length > 0) {

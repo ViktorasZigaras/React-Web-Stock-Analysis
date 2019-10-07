@@ -50,10 +50,10 @@ class FondList extends PureComponent {
     .then((res) => {
       const data = res.data.funds[fond.fundId].day;
       const value = data[data.length-1].price;
-      fond.shareValue = convertNumbers(value, 2);
-      fond.totalValue = multiplyNumbers(fond.quantity, fond.shareValue, 2);
-      fond.valueChange = substractNumbers(fond.totalValue, fond.value, 2);
-      fond.valuePercentChange = percentDivisionNumbers(fond.valueChange, fond.value, 2);
+      fond.shareValue = convertNumbers(value);
+      fond.totalValue = multiplyNumbers(fond.quantity, fond.shareValue);
+      fond.valueChange = substractNumbers(fond.totalValue, fond.value);
+      fond.valuePercentChange = percentDivisionNumbers(fond.valueChange, fond.value);
       const updatedFond = {...fond};
       this.props.callbackFromParent(updatedFond);
     })
