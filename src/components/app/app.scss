@@ -1,10 +1,9 @@
-/*.flex {
-  display: flex;
-}*/
+$black: #000000;
+$lightblue: #e3f7f4;
 
 .main-section {
-  border: 1px solid #000000;
-  background-color: #e3f7f4;
+  border: 1px solid $black;
+  background-color: $lightblue;
   padding: 10px;
   width: 1110px;
   margin-top: 15px;

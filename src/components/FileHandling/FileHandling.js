@@ -1,13 +1,12 @@
-import React, { PureComponent } from 'react';
-import { Col, Row, Button } from 'reactstrap';
-import './FileHandling.css';
+import React, {PureComponent} from 'react';
+import {Col, Row, Button} from 'reactstrap';
+import './fileHandling.scss';
 import cloneDeep from 'lodash/cloneDeep';
-import {
-  substractNumbers, 
-  addNumbers, 
-  convertNumbers} from '../../Helpers/NumericHelper.js';
+import {setList, setSelectedFund} from '../../actions/index.js';
+import {connect} from "react-redux";
+import * as Numeric from '../../helpers/numericHelper.js';
 
-class FileHandling extends PureComponent {
+class FileHandlingClass extends PureComponent {
   constructor(props) {
     super(props)
     this.uploadFile = this.uploadFile.bind(this);
@@ -16,7 +15,6 @@ class FileHandling extends PureComponent {
     
   uploadFile (event) {
     const file = event.target.files[0];
-    //console.log(file);
     const reader = new FileReader();
     reader.onload = function(){ 
       let result = reader.result;
@@ -28,10 +26,10 @@ class FileHandling extends PureComponent {
       let fundsGlobal = [];
       const iterate = function(element) {
         if (element.fundName === item.fundName && element.fundId === item.fundId) {
-          element.cost = addNumbers(element.cost, item.cost);
-          element.quantity = addNumbers(element.quantity, item.quantity, 4);
-          element.tax = addNumbers(element.tax, item.tax);
-          element.value = substractNumbers(element.cost, element.tax);
+          element.cost = Numeric.addNumbers(element.cost, item.cost);
+          element.quantity = Numeric.addNumbers(element.quantity, item.quantity, 4);
+          element.tax = Numeric.addNumbers(element.tax, item.tax);
+          element.value = Numeric.substractNumbers(element.cost, element.tax);
           createNew = false;
           element.entries.push(item);
         }
@@ -47,11 +45,11 @@ class FileHandling extends PureComponent {
           fundName: fields[0],
           fundId: fields[1], 
           date: fields[2], 
-          cost: convertNumbers(fields[3]),
-          quantity: convertNumbers(fields[4], 4),
-          tax: convertNumbers(fields[5])
+          cost: Numeric.convertNumbers(fields[3]),
+          quantity: Numeric.convertNumbers(fields[4], 4),
+          tax: Numeric.convertNumbers(fields[5])
         };
-        item.value = substractNumbers(item.cost, item.tax);
+        item.value = Numeric.substractNumbers(item.cost, item.tax);
         if (fundsGlobal.length > 0) {item.fundName = item.fundName.substring(2);}
         item.entries = [cloneDeep(item)];
         if (fundsGlobal.length > 0) {
@@ -62,20 +60,20 @@ class FileHandling extends PureComponent {
         result = result.substring(index + 1);
         index = result.indexOf(';');
       }
-      this.props.callbackFromParent(fundsGlobal);
-      this.props.clearLists();
+      this.props.setList(fundsGlobal.sort((a, b) => (a.fundName > b.fundName) ? 1 : -1));
+      this.props.setSelectedFund(null);
     }.bind(this);
     reader.readAsText(file);
     this.setState({file: file});
   }
-  
+
   onSaveList () {
-    if (this.state.file && this.props.setList) {
+    if (this.state.file && this.props.list) {
       let data = '';
       let entry;
       let item;
-      for (let i = 0; i < this.props.setList.length; i++) {
-        entry = this.props.setList[i];
+      for (let i = 0; i < this.props.list.length; i++) {
+        entry = this.props.list[i];
         if (entry.entries) {
           for (let j = 0; j < entry.entries.length; j++) {
             item = entry.entries[j];
@@ -108,4 +106,16 @@ class FileHandling extends PureComponent {
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    setList: item => dispatch(setList(item)),
+    setSelectedFund: item => dispatch(setSelectedFund(item))
+  };
+}
+
+const mapStateToProps = state => {
+  return {list: state.list};
+};
+
+const FileHandling = connect(mapStateToProps, mapDispatchToProps)(FileHandlingClass);
 export default FileHandling;

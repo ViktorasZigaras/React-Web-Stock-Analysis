@@ -1,9 +1,14 @@
+$lightblue: #d9e6f7;
+$black: #000000;
+$cyan: #b4f7f6;
+$lightorange: #f9e8c5;
+
 .purchase-display-section {
     width: 825px;
     height: 300px;
     overflow-y: auto;
-    background-color: #d9e6f7;
-    border: 1px solid #000000;
+    background-color: $lightblue;
+    border: 1px solid $black;
     margin-left: 15px;
     margin-top: 10px;
 }
@@ -20,14 +25,14 @@
 .cell-mix {
     display: table-cell;
     padding: 5px;
-    border: 1px solid #000000;
+    border: 1px solid $black;
 }
   
 .row-mix:hover {
-    background-color: #b4f7f6;
+    background-color: $cyan;
     cursor: pointer;
 }
   
 .cell-mix-header:hover {
-    background-color: #f9e8c5;
+    background-color: $lightorange;
 }

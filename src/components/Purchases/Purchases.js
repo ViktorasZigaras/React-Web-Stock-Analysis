@@ -1,19 +1,14 @@
-import React, { PureComponent } from 'react';
-import './Purchases.css';
-import {
-  multiplyNumbers, 
-  substractNumbers, 
-  percentDivisionNumbers} from '../../Helpers/NumericHelper.js';
+import React, {PureComponent} from 'react';
+import './purchases.scss';
+import {setSelectedItem} from '../../actions/index.js';
+import {connect} from "react-redux";
+import * as Numeric from '../../helpers/numericHelper.js';
 
-class Purchases extends PureComponent {
+class PurchasesClass extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {sortDirection: 'asc', lastSortColumn: ''};
   };
-
-  onClickPurchase(purchase) {
-    this.props.selectedItem(purchase);
-  }
 
   onClickSort(field) {
     let sortDirection = 'asc';
@@ -22,10 +17,10 @@ class Purchases extends PureComponent {
       sortDirection = 'desc';
       direction = -1;
     }
-    if (field === 'date') {this.props.selectedFond.entries.sort(
+    if (field === 'date') {this.props.selectedFund.entries.sort(
       (a, b) => (a[field] > b[field]) ? direction : -direction);
     }
-    else {this.props.selectedFond.entries.sort(
+    else {this.props.selectedFund.entries.sort(
       (a, b) => (Number(a[field]) > Number(b[field])) ? direction : -direction);
     }
     this.setState({lastSortColumn: field, sortDirection: sortDirection});
@@ -33,8 +28,8 @@ class Purchases extends PureComponent {
 
   render() {
     const purchases = [];
-    if (this.props.selectedFond) {
-      const fond = {...this.props.selectedFond};
+    if (this.props.selectedFund) {
+      const fond = {...this.props.selectedFund};
       const currency = 'EUR'; //&nbsp;
       purchases.push(
       <div key='header' className="row-mix">
@@ -69,14 +64,14 @@ class Purchases extends PureComponent {
         let i = 0;
         fond.entries.forEach((entry) => { 
           i++;
-          entry.totalValue = multiplyNumbers(entry.quantity, fond.shareValue);
-          entry.valueChange = substractNumbers(entry.totalValue, entry.value);
-          entry.valuePercentChange = percentDivisionNumbers(entry.valueChange, entry.value);
+          entry.totalValue = Numeric.multiplyNumbers(entry.quantity, fond.shareValue);
+          entry.valueChange = Numeric.substractNumbers(entry.totalValue, entry.value);
+          entry.valuePercentChange = Numeric.percentDivisionNumbers(entry.valueChange, entry.value);
           if (entry.value < 0) {entry.valuePercentChange *= -1;}
           changeTrajectory = '';
           if (entry.valueChange > 0) {changeTrajectory = '+';}
           purchases.push(
-            <div key={i} className="row-mix" onClick={()=>this.onClickPurchase(entry)}>
+            <div key={i} className="row-mix" onClick={() => this.props.setSelectedItem(entry)}>
               <div className="cell-mix">{entry.date}</div>
               <div className="cell-mix">{entry.cost}</div>
               <div className="cell-mix">x{entry.quantity}</div>
@@ -103,4 +98,13 @@ class Purchases extends PureComponent {
   }
 }
 
-export default Purchases;
+function mapDispatchToProps(dispatch) {
+  return {setSelectedItem: item => dispatch(setSelectedItem(item))};
+}
+
+const mapStateToProps = state => {
+  return {selectedFund: state.selectedFund};
+};
+
+const FileHandling = connect(mapStateToProps, mapDispatchToProps)(PurchasesClass);
+export default FileHandling;

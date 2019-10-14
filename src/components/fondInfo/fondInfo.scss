@@ -1,16 +1,16 @@
+$beige: #f1f4d9;
+$black: #000000;
+
 .main-label {
-    /*margin-top: 5px;*/
     height: 5px;
-    /*width: 100%;*/
     width: 460px;
     margin-left: 5px;
-    /*overflow-x: hidden;*/
 }
 
 .right-section {
     width: 465px;
     height: 155px;
     margin-left: 10px;
-    background-color: #f1f4d9;
-    border: 1px solid #000000;
+    background-color: $beige;
+    border: 1px solid $black;
 }

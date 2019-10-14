@@ -1,13 +1,13 @@
+$black: #000000;
+$orange: #f4d4ad;
+
 .control-section {
-    border: 1px solid #000000;
-    background-color: #f4d4ad;
+    border: 1px solid $black;
+    background-color: $orange;
     padding: 10px;
     width: 250px;
-    /*margin-top: 15px;*/
     margin-left: 10px;
     height: 465px;
-    /*margin-right: 15px;
-    */
 }
 
 .spacing {
