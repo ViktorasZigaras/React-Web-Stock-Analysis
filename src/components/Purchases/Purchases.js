@@ -3,28 +3,13 @@ import './purchases.scss';
 import {setSelectedItem} from '../../actions/index.js';
 import {connect} from "react-redux";
 import * as Numeric from '../../helpers/numericHelper.js';
+import onClickSort from './onClickSort.js';
 
-class PurchasesClass extends PureComponent {
+class PurchasesView extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {sortDirection: 'asc', lastSortColumn: ''};
   };
-
-  onClickSort(field) {
-    let sortDirection = 'asc';
-    let direction = 1;
-    if (this.state.lastSortColumn === field && this.state.sortDirection === 'asc') {
-      sortDirection = 'desc';
-      direction = -1;
-    }
-    if (field === 'date') {this.props.selectedFund.entries.sort(
-      (a, b) => (a[field] > b[field]) ? direction : -direction);
-    }
-    else {this.props.selectedFund.entries.sort(
-      (a, b) => (Number(a[field]) > Number(b[field])) ? direction : -direction);
-    }
-    this.setState({lastSortColumn: field, sortDirection: sortDirection});
-  }
 
   render() {
     const purchases = [];
@@ -34,28 +19,28 @@ class PurchasesClass extends PureComponent {
       purchases.push(
       <div key='header' className="row-mix">
         <div className="cell-mix cell-mix-header" 
-          onClick={()=>this.onClickSort('date')}>
+          onClick={()=>onClickSort('date', this)}>
           Date</div>
         <div className="cell-mix cell-mix-header" 
-          onClick={()=>this.onClickSort('cost')}>
+          onClick={()=>onClickSort('cost', this)}>
           Amount ({currency})</div>
         <div className="cell-mix cell-mix-header" 
-          onClick={()=>this.onClickSort('quantity')}>
+          onClick={()=>onClickSort('quantity', this)}>
           Quantity</div>
         <div className="cell-mix cell-mix-header" 
-          onClick={()=>this.onClickSort('tax')}>
+          onClick={()=>onClickSort('tax', this)}>
           Tax ({currency})</div>
         <div className="cell-mix cell-mix-header" 
-          onClick={()=>this.onClickSort('value')}>
+          onClick={()=>onClickSort('value', this)}>
           Value ({currency})</div>
         <div className="cell-mix cell-mix-header" 
-          onClick={()=>this.onClickSort('totalValue')}>
+          onClick={()=>onClickSort('totalValue', this)}>
           Total Value</div>
         <div className="cell-mix cell-mix-header" 
-          onClick={()=>this.onClickSort('valueChange')}>
+          onClick={()=>onClickSort('valueChange', this)}>
           Value Change</div>
         <div className="cell-mix cell-mix-header" 
-          onClick={()=>this.onClickSort('valuePercentChange')}>
+          onClick={()=>onClickSort('valuePercentChange', this)}>
           Percent Change</div>
       </div>);
 
@@ -106,5 +91,5 @@ const mapStateToProps = state => {
   return {selectedFund: state.selectedFund};
 };
 
-const FileHandling = connect(mapStateToProps, mapDispatchToProps)(PurchasesClass);
-export default FileHandling;
+const Purchases = connect(mapStateToProps, mapDispatchToProps)(PurchasesView);
+export default Purchases;

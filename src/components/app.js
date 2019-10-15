@@ -1,11 +1,11 @@
 import React, {PureComponent} from 'react';
 import './app.scss';
 import {Container, Row, Col} from 'reactstrap';
-import FondList from '../fondList/fondList.js';
-import FondInfo from '../fondInfo/fondInfo.js';
-import Purchases from '../purchases/purchases.js';
-import Controls from '../controls/controls.js';
-import FileHandling from '../fileHandling/fileHandling.js';
+import FondList from './fondList/fondList.js';
+import FondInfo from './fondInfo/fondInfo.js';
+import Purchases from './purchases/purchases.js';
+import Controls from './controls/controls.js';
+import FileHandling from './fileHandling/fileHandling.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends PureComponent {

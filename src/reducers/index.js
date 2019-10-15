@@ -13,16 +13,12 @@ const initialState = {
 };
 
 function rootReducer(state = initialState, action) {
-    let fundName = '';
-    let fundId = '';
     if (action.type === Constants.SET_SELECTED_FUND) {
+        let fundName = '';
+        let fundId = '';
         if (action.payload) {
             fundName = action.payload.fundName;
             fundId = action.payload.fundId;
-        }
-        else {
-            fundName = '';
-            fundId = '';
         }
         return Object.assign({}, state, {
             selectedFund: action.payload,
