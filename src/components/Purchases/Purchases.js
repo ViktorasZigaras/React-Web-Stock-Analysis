@@ -1,14 +1,17 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import './purchases.scss';
-import {setSelectedItem} from '../../actions/index.js';
-import {connect} from "react-redux";
-import * as Numeric from '../../helpers/numericHelper.js';
-import onClickSort from './onClickSort.js';
+import Actions from '../../redux/actions';
+import Numeric from '../../helpers';
+import onClickSort from './onClickSort';
 
 class PurchasesView extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {sortDirection: 'asc', lastSortColumn: ''};
+    this.state = {
+      sortDirection: 'asc',
+      lastSortColumn: ''
+    };
   };
 
   render() {
@@ -17,32 +20,25 @@ class PurchasesView extends PureComponent {
       const fond = {...this.props.selectedFund};
       const currency = 'EUR'; //&nbsp;
       purchases.push(
-      <div key='header' className="row-mix">
-        <div className="cell-mix cell-mix-header" 
-          onClick={()=>onClickSort('date', this)}>
-          Date</div>
-        <div className="cell-mix cell-mix-header" 
-          onClick={()=>onClickSort('cost', this)}>
-          Amount ({currency})</div>
-        <div className="cell-mix cell-mix-header" 
-          onClick={()=>onClickSort('quantity', this)}>
-          Quantity</div>
-        <div className="cell-mix cell-mix-header" 
-          onClick={()=>onClickSort('tax', this)}>
-          Tax ({currency})</div>
-        <div className="cell-mix cell-mix-header" 
-          onClick={()=>onClickSort('value', this)}>
-          Value ({currency})</div>
-        <div className="cell-mix cell-mix-header" 
-          onClick={()=>onClickSort('totalValue', this)}>
-          Total Value</div>
-        <div className="cell-mix cell-mix-header" 
-          onClick={()=>onClickSort('valueChange', this)}>
-          Value Change</div>
-        <div className="cell-mix cell-mix-header" 
-          onClick={()=>onClickSort('valuePercentChange', this)}>
-          Percent Change</div>
-      </div>);
+        <div key='header' className="row-mix">
+          <div className="cell-mix cell-mix-header" 
+            onClick={() => onClickSort('date', this)}>Date</div>
+          <div className="cell-mix cell-mix-header" 
+            onClick={() => onClickSort('cost', this)}>Amount ({currency})</div>
+          <div className="cell-mix cell-mix-header" 
+            onClick={() => onClickSort('quantity', this)}>Quantity</div>
+          <div className="cell-mix cell-mix-header" 
+            onClick={() => onClickSort('tax', this)}>Tax ({currency})</div>
+          <div className="cell-mix cell-mix-header" 
+            onClick={() => onClickSort('value', this)}>Value ({currency})</div>
+          <div className="cell-mix cell-mix-header" 
+            onClick={() => onClickSort('totalValue', this)}>Total Value</div>
+          <div className="cell-mix cell-mix-header" 
+            onClick={() => onClickSort('valueChange', this)}>Value Change</div>
+          <div className="cell-mix cell-mix-header" 
+            onClick={() => onClickSort('valuePercentChange', this)}>Percent Change</div>
+        </div>
+      );
 
       if (fond.entries) {
         let changeTrajectory;
@@ -52,9 +48,8 @@ class PurchasesView extends PureComponent {
           entry.totalValue = Numeric.multiplyNumbers(entry.quantity, fond.shareValue);
           entry.valueChange = Numeric.substractNumbers(entry.totalValue, entry.value);
           entry.valuePercentChange = Numeric.percentDivisionNumbers(entry.valueChange, entry.value);
-          if (entry.value < 0) {entry.valuePercentChange *= -1;}
-          changeTrajectory = '';
-          if (entry.valueChange > 0) {changeTrajectory = '+';}
+          if (entry.value < 0) entry.valuePercentChange *= -1;
+          changeTrajectory = entry.valueChange > 0 ? '+' : '';
           purchases.push(
             <div key={i} className="row-mix" onClick={() => this.props.setSelectedItem(entry)}>
               <div className="cell-mix">{entry.date}</div>
@@ -64,10 +59,10 @@ class PurchasesView extends PureComponent {
               <div className="cell-mix">{entry.value}</div>
               <div className="cell-mix">{entry.totalValue}</div>
               <div className="cell-mix" 
-                style={entry.valueChange > 0 ? {color:'green'}: {color:'red'}}>
+                style={entry.valueChange > 0 ? {color:'green'} : {color:'red'}}>
                 {changeTrajectory}{entry.valueChange}</div>
               <div className="cell-mix" 
-                style={entry.valuePercentChange > 0 ? {color:'green'}: {color:'red'}}>
+                style={entry.valuePercentChange > 0 ? {color:'green'} : {color:'red'}}>
                 {changeTrajectory}{entry.valuePercentChange}%</div>
             </div>
           );
@@ -84,12 +79,11 @@ class PurchasesView extends PureComponent {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {setSelectedItem: item => dispatch(setSelectedItem(item))};
+  return {setSelectedItem: (item) => dispatch(Actions.setSelectedItem(item))};
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {selectedFund: state.selectedFund};
 };
 
-const Purchases = connect(mapStateToProps, mapDispatchToProps)(PurchasesView);
-export default Purchases;
+export default connect(mapStateToProps, mapDispatchToProps)(PurchasesView);

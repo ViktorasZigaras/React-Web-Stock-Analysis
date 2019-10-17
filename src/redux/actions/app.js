@@ -1,4 +1,4 @@
-import * as Constants from "../constants/action-types.js";
+import Constants from '../constants';
 
 export function setSelectedFund(payload) {return {type: Constants.SET_SELECTED_FUND, payload}};
 export function setSelectedItem(payload) {return {type: Constants.SET_SELECTED_ITEM, payload}};

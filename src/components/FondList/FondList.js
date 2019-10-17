@@ -1,8 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './fondList.scss';
-import onFondClick from './onFondClick.js';
-import {connect} from "react-redux";
-import * as Actions from '../../actions/index.js';
+import onFondClick from './onFondClick';
+import Actions from '../../redux/actions';
 
 function FondListView(props) {
   /*const fonds = [];
@@ -13,10 +13,12 @@ function FondListView(props) {
     </p>);
   });*///alternative to map?
 
-  const fonds = props.list.map(function(entry) {
-    return <p key={entry.fundName} className="hover-item" onClick={()=>onFondClick(entry, props)}>
-      {entry.fundName} ({entry.fundId})</p>;
-  }/*.bind(this)*/);
+  const fonds = props.list.map(
+    (entry) => {
+      return <p key={entry.fundName} className="hover-item" onClick={() => onFondClick(entry, props)}>
+        {entry.fundName} ({entry.fundId})</p>;
+    }
+  );
       
   return (
     <div className="left-section">{fonds}</div>
@@ -24,12 +26,11 @@ function FondListView(props) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {setSelectedFund: item => dispatch(Actions.setSelectedFund(item))};
+  return {setSelectedFund: (item) => dispatch(Actions.setSelectedFund(item))};
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {list: state.list};
 };
 
-const FondList = connect(mapStateToProps, mapDispatchToProps)(FondListView);
-export default FondList;
+export default connect(mapStateToProps, mapDispatchToProps)(FondListView);

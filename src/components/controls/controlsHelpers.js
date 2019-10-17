@@ -1,11 +1,13 @@
-import * as Numeric from '../../helpers/numericHelper.js';
+import Numeric from '../../helpers';
 
 export function updateLists(selectedFund, props) {
   props.setSelectedFund(selectedFund);
   const list = [...props.list];
   Object.assign(
-    list.find(obj => obj.fundName === selectedFund.fundName && obj.fundId === selectedFund.fundId), 
-    selectedFund);
+    list.find((obj) => 
+      obj.fundName === selectedFund.fundName 
+      && obj.fundId === selectedFund.fundId
+    ), selectedFund);
   props.setList(list);
 }
 
@@ -22,5 +24,4 @@ export function recalculateList(list) {
   list.totalValue = Numeric.multiplyNumbers(list.quantity, list.shareValue);
   list.valueChange = Numeric.substractNumbers(list.totalValue, list.value);
   list.valuePercentChange = Numeric.percentDivisionNumbers(list.valueChange, list.value);
-  //return list;
 }

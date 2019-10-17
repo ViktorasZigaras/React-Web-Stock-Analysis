@@ -1,5 +1,5 @@
-import * as Helpers from './controlsHelpers.js';
-import * as Numeric from '../../helpers/numericHelper.js';
+import * as Helpers from './controlsHelpers';
+import Numeric from '../../helpers';
 
 export default function onCreateItem(props) {
   if (props.selectedFund) {
@@ -14,5 +14,5 @@ export default function onCreateItem(props) {
     selectedFund.entries.sort((a, b) => (a['date'] > b['date']) ? 1 : -1);
     Helpers.updateLists(selectedFund, props);
   }
-  else {alert('No Fund is selected, please do that first.');}
+  else alert('No Fund is selected, please do that first.');
 }

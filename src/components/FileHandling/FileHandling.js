@@ -1,14 +1,14 @@
-import React, {PureComponent} from 'react';
-import {Col, Row, Button} from 'reactstrap';
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
+import { Col, Row, Button } from 'reactstrap';
 import './fileHandling.scss';
-import {setList, setSelectedFund} from '../../actions/index.js';
-import {connect} from "react-redux";
-import onUploadFile from './onUploadFile.js';
-import onSaveList from './onSaveList.js';
+import Actions from '../../redux/actions';
+import onUploadFile from './onUploadFile';
+import onSaveList from './onSaveList';
 
 class FileHandlingView extends PureComponent {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {file: ''};
   }
 
@@ -27,14 +27,13 @@ class FileHandlingView extends PureComponent {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setList: item => dispatch(setList(item)),
-    setSelectedFund: item => dispatch(setSelectedFund(item))
+    setList: (item) => dispatch(Actions.setList(item)),
+    setSelectedFund: (item) => dispatch(Actions.setSelectedFund(item))
   };
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {list: state.list};
 };
 
-const FileHandling = connect(mapStateToProps, mapDispatchToProps)(FileHandlingView);
-export default FileHandling;
+export default connect(mapStateToProps, mapDispatchToProps)(FileHandlingView);

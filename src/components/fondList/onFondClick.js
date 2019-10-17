@@ -1,6 +1,6 @@
 import axios from 'axios';
-import location from '../../config.js';
-import * as Numeric from '../../helpers/numericHelper.js';
+import location from '../../config';
+import Numeric from '../../helpers';
 
 export default function onFondClickHandler(fond, props) {
   if (fond.shareValue) {
@@ -16,7 +16,7 @@ export default function onFondClickHandler(fond, props) {
   let prevYear = year;
   if (prevDate > 30) {
     prevDate = 30;
-    if (prevMonth === 2) {prevDate = 28;}
+    if (prevMonth === 2) prevDate = 28;
   }
   if (prevMonth === 0) {
     prevMonth = 12;

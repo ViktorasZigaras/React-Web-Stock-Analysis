@@ -1,15 +1,16 @@
-import * as Helpers from './controlsHelpers.js';
-import * as Numeric from '../../helpers/numericHelper.js';
+import * as Helpers from './controlsHelpers';
+import Numeric from '../../helpers';
 
 export default function onCreateItem(props) {
   if (props.selectedItem) {
     let selectedFund = {...props.selectedFund};
     const entries = selectedFund.entries;
-    let item = entries.find(obj => 
+    let item = entries.find((obj) => 
       obj.date === props.selectedItem.date
       && obj.cost === props.selectedItem.cost
       && obj.quantity === props.selectedItem.quantity
-      && obj.tax === props.selectedItem.tax);
+      && obj.tax === props.selectedItem.tax
+    );
     if (item) {
       let value = props.itemAmount - props.itemTax;
       selectedFund.cost = Numeric.removeAndAddNumbers(selectedFund.cost, item.cost, props.itemAmount);
@@ -21,5 +22,5 @@ export default function onCreateItem(props) {
       Helpers.updateLists(selectedFund, props);
     }
   }
-  else {alert('No Purchase is selected, please do that first.');}
+  else alert('No Purchase is selected, please do that first.');
 }
