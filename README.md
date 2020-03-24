@@ -20,17 +20,17 @@
 ### There are 6 controls provided to manipulate data in app:
 
 
-**1.** Create Fund: you can create a Fund that does not have exact name and id of another Fund. ID has to be a certain number, check for exact values in Luminor Fund reference.
+**1. Create Fund:** you can create a Fund that does not have exact name and id of another Fund. ID has to be a certain number, check for exact values in Luminor Fund reference.
 
-**2.** Update Fund: you can update fund you clicked last, same ID rules apply (names are not strictly used in calculations, they're mostly representative).
+**2. Update Fund:** you can update fund you clicked last, same ID rules apply (names are not strictly used in calculations, they're mostly representative).
 
-**3.** Delete Fund: you can delete last Fund you clicked.
+**3. Delete Fund:** you can delete last Fund you clicked.
 
-**4.** Create Purchase: you can create any amount of Purchases even with identical values. They all are added to the Fund you clicked last. Do be careful to use proper numeric values for correct calculations. Dates are not strictly checked but for your own convienence use proper dates.
+**4. Create Purchase:** you can create any amount of Purchases even with identical values. They all are added to the Fund you clicked last. Do be careful to use proper numeric values for correct calculations. Dates are not strictly checked but for your own convienence use proper dates.
 
-**5.** Update Purchase: you can update last Purchase you clicked.
+**5. Update Purchase:** you can update last Purchase you clicked.
 
-**6.** Delete Purchase: you can delete last Purchase you clicked.
+**6. Delete Purchase:** you can delete last Purchase you clicked.
 
 
 
