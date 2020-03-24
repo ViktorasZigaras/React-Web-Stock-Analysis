@@ -37,3 +37,5 @@
 **Note:** clicking funds or purchases fill in text fields provided and/or you can edit those fields yourself.
 
 **Note:** all manipulations are immediately reflected on the last clicked Fund displayed on upper right section.
+
+**An example can be seen in:** https://github.com/ViktorasZigaras/React-Web-Stock-Analysis/blob/master/Screenshot%20(3).png
